@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tạo chữ Drop Cap bằng CSS</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #f8fafc;
+      color: #1e293b;
+      padding: 40px 16px;
+    }
+
+    .container {
+      max-width: 760px;
+      margin: 0 auto;
+      background: #ffffff;
+      padding: 36px 40px;
+      border-radius: 14px;
+      box-shadow: 0 6px 24px rgba(15, 23, 42, 0.06);
+    }
+
+    h1 {
+      font-size: 26px;
+      color: #0f172a;
+      margin-bottom: 8px;
+    }
+
+    .subtitle {
+      font-size: 14px;
+      color: #64748b;
+      margin-bottom: 28px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid #e2e8f0;
+    }
+
+    h2 {
+      font-size: 17px;
+      color: #334155;
+      margin: 24px 0 12px;
+    }
+
+    p {
+      line-height: 1.75;
+      font-size: 16px;
+      color: #334155;
+      margin-bottom: 16px;
+      text-align: justify;
+    }
+
+    .dropcap-classic::first-letter {
+      float: left;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 3.6em;
+      line-height: 0.85;
+      font-weight: 700;
+      color: #0284c7;
+      margin: 4px 12px 0 0;
+    }
+
+    .dropcap-box::first-letter {
+      float: left;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 2.8em;
+      line-height: 1;
+      font-weight: 700;
+      color: #ffffff;
+      background: #0f172a;
+      padding: 8px 14px;
+      border-radius: 8px;
+      margin: 4px 14px 2px 0;
+    }
+  </style>
+</head>
+<body>
+
+  <article class="container">
+    <h1>Tạo chữ Drop Cap bằng CSS</h1>
+    <p class="subtitle">Minh họa kỹ thuật định dạng chữ cái mở đầu đoạn văn sử dụng pseudo-element <code>:first-letter</code>.</p>
+
+    <h2>1. Drop Cap phong cách cổ điển</h2>
+    <p class="dropcap-classic">
+      Nghệ thuật trình bày chữ cái đầu tiên phóng to nhiều dòng — thường gọi là Drop Cap — bắt nguồn từ các bản chép tay và sách in cổ điển. Trong thiết kế web hiện đại, thuộc tính <strong>:first-letter</strong> kết hợp với <strong>float: left</strong> giúp tạo điểm nhấn thị giác tinh tế mà không cần thêm thẻ HTML thừa.
+    </p>
+    <p>
+      Nhờ khoảng cách lề hợp lý và chiều cao dòng được căn chỉnh gọn gàng, phần chữ bên cạnh tự động ôm sát quanh ký tự mở đầu, giúp người đọc dễ dàng bắt nhịp vào nội dung chính của bài viết.
+    </p>
+
+    <h2>2. Drop Cap dạng khối vuông nổi bật</h2>
+    <p class="dropcap-box">
+      Bên cạnh kiểu chữ truyền thống, bạn hoàn toàn có thể thêm màu nền, khoảng đệm và bo góc cho ký tự đầu tiên để tạo phong cách tạp chí hiện đại. Cách làm này rất phù hợp cho các trang blog, bài phân tích chuyên sâu hoặc trang giới thiệu dự án cá nhân.
+    </p>
+  </article>
+
+</body>
+</html>
