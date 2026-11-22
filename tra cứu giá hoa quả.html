@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tra cứu giá hoa quả bằng JavaScript</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #f1f5f9;
+      color: #0f172a;
+      padding: 36px 16px;
+    }
+
+    .container {
+      max-width: 720px;
+      margin: 0 auto;
+      background: #ffffff;
+      padding: 28px 32px;
+      border-radius: 16px;
+      box-shadow: 0 10px 28px rgba(15, 23, 42, 0.08);
+    }
+
+    h1 {
+      font-size: 24px;
+      margin-bottom: 6px;
+    }
+
+    .subtitle {
+      font-size: 14px;
+      color: #64748b;
+      margin-bottom: 22px;
+    }
+
+    .search-bar {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    input[type="text"] {
+      flex: 1;
+      padding: 11px 14px;
+      font-size: 15px;
+      border: 1.5px solid #cbd5e1;
+      border-radius: 10px;
+      outline: none;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    input[type="text"]:focus {
+      border-color: #16a34a;
+      box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.14);
+    }
+
+    select {
+      padding: 11px 12px;
+      font-size: 14px;
+      border: 1.5px solid #cbd5e1;
+      border-radius: 10px;
+      background: #f8fafc;
+      color: #0f172a;
+      outline: none;
+      cursor: pointer;
+    }
+
+    .quick-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 20px;
+    }
+
+    .tag-btn {
+      padding: 5px 12px;
+      font-size: 13px;
+      background: #f0fdf4;
+      color: #15803d;
+      border: 1px solid #bbf7d0;
+      border-radius: 999px;
+      cursor: pointer;
+      transition: background 0.2s ease;
+    }
+
+    .tag-btn:hover {
+      background: #dcfce7;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 8px;
+    }
+
+    th, td {
+      text-align: left;
+      padding: 12px 14px;
+      border-bottom: 1px solid #e2e8f0;
+      font-size: 14.5px;
+    }
+
+    th {
+      background: #f8fafc;
+      color: #475569;
+      font-weight: 600;
+    }
+
+    .price {
+      font-weight: 700;
+      color: #15803d;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 3px 9px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 500;
+    }
+
+    .badge-local {
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    .badge-import {
+      background: #e0f2fe;
+      color: #075985;
+    }
+
+    .empty-msg {
+      text-align: center;
+      padding: 24px;
+      color: #64748b;
+      font-size: 14.5px;
+    }
+  </style>
+</head>
+<body>
+
+  <main class="container">
+    <h1>Tra cứu giá hoa quả</h1>
+    <p class="subtitle">Nhập tên trái cây (hỗ trợ không dấu) hoặc chọn nhóm để xem bảng giá tham khảo.</p>
+
+    <div class="search-bar">
+      <input type="text" id="searchInput" placeholder="VD: táo, xoài, dâu tây, cam..." autocomplete="off" />
+      <select id="categoryFilter">
+        <option value="all">Tất cả loại</option>
+        <option value="local">Trong nước</option>
+        <option value="import">Nhập khẩu</option>
+      </select>
+    </div>
+
+    <div class="quick-tags" id="quickTags"></div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Tên hoa quả</th>
+          <th>Phân loại</th>
+          <th>Đơn vị</th>
+          <th>Giá tham khảo</th>
+        </tr>
+      </thead>
+      <tbody id="fruitTableBody"></tbody>
+    </table>
+    <div id="emptyState" class="empty-msg" style="display: none;">
+      Không tìm thấy loại hoa quả nào khớp với từ khóa.
+    </div>
+  </main>
+
+  <script>
+    const fruits = [
+      { name: "Xoài cát Hòa Lộc", category: "local", unit: "kg", price: 65000 },
+      { name: "Cam sành", category: "local", unit: "kg", price: 28000 },
+      { name: "Thanh long ruột đỏ", category: "local", unit: "kg", price: 32000 },
+      { name: "Dưa hấu", category: "local", unit: "kg", price: 20000 },
+      { name: "Bưởi da xanh", category: "local", unit: "kg", price: 55000 },
+      { name: "Táo Envy", category: "import", unit: "kg", price: 145000 },
+      { name: "Nho mẫu đơn Hàn Quốc", category: "import", unit: "kg", price: 240000 },
+      { name: "Dâu tây", category: "import", unit: "hộp (500g)", price: 95000 },
+      { name: "Kiwi vàng", category: "import", unit: "kg", price: 130000 }
+    ];
+
+    const searchInput = document.getElementById("searchInput");
+    const categoryFilter = document.getElementById("categoryFilter");
+    const tableBody = document.getElementById("fruitTableBody");
+    const emptyState = document.getElementById("emptyState");
+    const quickTags = document.getElementById("quickTags");
+
+    // Bỏ dấu tiếng Việt để tìm kiếm linh hoạt hơn
+    function removeDiacritics(str) {
+      return str
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .replace(/đ/g, "d")
+        .replace(/Đ/g, "D")
+        .toLowerCase()
+        .trim();
+    }
+
+    function formatVND(amount) {
+      return amount.toLocaleString("vi-VN") + " đ";
+    }
+
+    function renderQuickTags() {
+      const sampleNames = ["Xoài", "Cam", "Táo", "Dâu tây", "Nho"];
+      quickTags.innerHTML = sampleNames
+        .map((name) => `<button type="button" class="tag-btn" data-keyword="${name}">${name}</button>`)
+        .join("");
+
+      quickTags.querySelectorAll(".tag-btn").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          searchInput.value = btn.dataset.keyword;
+          renderFruits();
+        });
+      });
+    }
+
+    function renderFruits() {
+      const keyword = removeDiacritics(searchInput.value);
+      const selectedCategory = categoryFilter.value;
+
+      const filtered = fruits.filter((item) => {
+        const matchesName = removeDiacritics(item.name).includes(keyword);
+        const matchesCategory = selectedCategory === "all" || item.category === selectedCategory;
+        return matchesName && matchesCategory;
+      });
+
+      if (filtered.length === 0) {
+        tableBody.innerHTML = "";
+        emptyState.style.display = "block";
+        return;
+      }
+
+      emptyState.style.display = "none";
+      tableBody.innerHTML = filtered
+        .map((item) => {
+          const isLocal = item.category === "local";
+          const badgeClass = isLocal ? "badge-local" : "badge-import";
+          const badgeText = isLocal ? "Trong nước" : "Nhập khẩu";
+
+          return `
+            <tr>
+              <td><strong>${item.name}</strong></td>
+              <td><span class="badge ${badgeClass}">${badgeText}</span></td>
+              <td>${item.unit}</td>
+              <td class="price">${formatVND(item.price)}</td>
+            </tr>
+          `;
+        })
+        .join("");
+    }
+
+    searchInput.addEventListener("input", renderFruits);
+    categoryFilter.addEventListener("change", renderFruits);
+
+    renderQuickTags();
+    renderFruits();
+  </script>
+</body>
+</html>
